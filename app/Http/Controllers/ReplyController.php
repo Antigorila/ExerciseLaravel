@@ -31,7 +31,12 @@ class ReplyController extends Controller
     {
         //
     }
-
+    public function like(Reply $reply)
+    {
+        $reply->likes++;
+        $reply->save();
+        return back();
+    }
     /**
      * Display the specified resource.
      */

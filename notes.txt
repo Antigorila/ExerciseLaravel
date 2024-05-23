@@ -182,3 +182,6 @@ You will need to call a POST method, give the route,, use the csfr token and the
         @method('DELETE')
         <button type="submit" class="btn btn-danger">Delete</button>
     </form>
+
+Custom route:
+Route::put('{Route}/{ { VaribaleName } }/{Method}', [{Controller}::class, '{Method}'])->name('{Route}.{Method}');

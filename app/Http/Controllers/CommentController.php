@@ -32,7 +32,12 @@ class CommentController extends Controller
     {
         //
     }
-
+    public function like(Comment $comment)
+    {
+        $comment->likes++;
+        $comment->save();
+        return back();
+    }
     /**
      * Display the specified resource.
      */

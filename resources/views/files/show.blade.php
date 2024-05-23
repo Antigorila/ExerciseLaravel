@@ -65,13 +65,58 @@
                 </div>
             </div>
         </div>
-        <div class="card">
-            <div class="card bg-dark">
-                @foreach ($file->comments as $comment)
-                    
-                @endforeach
+        @foreach ($file->comments as $comment)
+        <div class="container text-body">
+            <div class="row d-flex justify-content-center">
+                <div class="d-flex flex-start mb-4">
+                    <img class="rounded-circle shadow-1-strong me-3 bg-white" src="{{ asset('storage/' . $comment->user->image) }}" alt="avatar" width="65" height="65"/>
+                    <div class="card w-100">
+                        <div class="card-body p-4">
+                            <h5>{{ $comment->user->name }}</h5>
+                            <p class="small">{{ $comment->created_at }}</p>
+                            <p>{{ $comment->text }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <form action="{{ route('comments.like', $comment) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="btn btn-danger">Likes: {{ $comment->likes }}</button>
+                                    </form>
+                                </div>                                    
+                                <a href="#!" class="btn btn-dark"> Reply</a>
+                            </div>
+                            <hr>
+                            @foreach ($comment->replies as $reply)
+                            <div class="container text-body">
+                                <div class="row d-flex justify-content-center">
+                                    <div class="d-flex flex-start mb-4">
+                                        <img class="rounded-circle shadow-1-strong me-3 bg-white" src="{{ asset('storage/' . $reply->user->image) }}" alt="avatar" width="65" height="65"/>
+                                        <div class="card w-100 bg-dark text-white">
+                                            <div class="card-body p-4">
+                                                <h5>{{ $reply->user->name }}</h5>
+                                                <p class="small">{{ $reply->created_at }}</p>
+                                                <p>{{ $comment->text }}</p>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex align-items-center">
+                                                        <form action="{{ route('comments.like', $comment) }}" method="POST" class="d-inline">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <button type="submit" class="btn btn-danger">Likes: {{ $comment->likes }}</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        @endforeach
     </div>
 </div>
 
