@@ -1,0 +1,184 @@
+Create project:
+1. composer create-project laravel/laravel [name]
+2. Open created folder from explorer
+3. composer require laravel/ui
+4. npm install
+5. php artisan ui bootstrap --auth
+7. set .env
+
+Run project:
+1. php artisan serve
+2. npm run dev(if its not working then update npm)
+
+Create model:
+    -php artisan make:model {model name} --all
+
+Create foregin id:
+    -Id syntax everywhere: $table->integer('id', true);
+
+    -To migration:
+        $table->integer('{foregin_table}_id')->index('{foregin_table}_id');
+
+    -Artisan command:
+        php artisan make:migration add_foreign_keys_to_{indexing table name}_table
+
+    -To the new file(up):
+        $table->foreign('{foregin_id}', '{index table name}_ibfk_{column nuber}')->references('id')->on('{foregin table}');
+    -To the new file(down):
+        $table->dropForeign('{index table name}_ibfk_{column nuber}');
+
+database terminal commands:
+    -php artisan optimize
+    -php artisan migrate:fresh --seed
+
+UserSeederCreation:
+    -php artisan make:seeder UserSeeder
+
+Use of seeder:
+    -{ClassName}::factory({Count})->create();
+
+Use of Database Seeder:
+    $this->call([
+        {SeederOfTheClass}::class
+    ]);
+
+This is how you can extend a blade page:
+    @extends('{page source}')
+    @section('content')
+    {Page content here}
+    @endsection
+
+Relations:
+    Basicly if you have a foregin id in your table then it should be BelongsTo or BelongsToMany. 
+    And if you have foregin id in your table then it should be HasOne or HasMany.
+    -Belongs to:
+        public function {RelationName}():BelongsTo 
+        {
+            return $this->belongsTo({ClassName}::class);
+        }
+
+        if you have a relation to the same table(for example: user and friend) then you can define the the relation over the foregin_id
+        public function {RelationName}():BelongsTo 
+        {
+            return $this->belongsTo({ClassName}::class, '{foregin_id}');
+        }
+    
+    -HasMany:
+        public function {RelationName}(): HasMany 
+        {
+            return $this->hasMany({ClassName}::class);
+        }
+
+    -BelongsToMany:
+        public function {RelationName}() : BelongsToMany
+        {
+            return $this->belongsToMany({ClassName}::class);
+        }
+    
+To make a model properties fillable: app\model\{ModelName}.php
+You need to put everything here that can be modified on the pages(even id's)
+    protected $fillable = ['{Columname}', '{ColumName}];
+
+If you need any css then before you do anything in the css you need to import it at the 'app.scss'
+    -@import 'resources/css/app.css';
+
+After you modified any route you have to do a 'php artisan optimize' becuse only after that will be the route available
+
+If you need to put images on the page the link the sstorage like so:
+    -php artisan storage:link
+Then you can call them like this:
+    -<img src="{{ asset('storage/' . {ImageName}) }}">
+
+If you need to get a variable in a page:
+    -To the controller of the Model(for example the index method):
+        -public function index()
+         {
+            return view('{View}', ['{VariableName}' => {The varable you want to give}]);
+         }
+    On the page you can call like this: ${VariableName}, this is not a method so do not put '( )' after it
+
+Routes:
+    To create a simple route for the basic CRUD methods you need to put this into the routes/web.php:
+        -Route::resource('{ModelName}', App\Http\Controllers\{ModelController}::class);
+    
+    To call a method though a route you need to do this(for example a button):
+        -Without constructor:
+            -<a class="btn" href="{{ route('{ModelName}.{MethodName}') }}">Button</a>
+        -With constructor:
+            -<a class="btn" href="{{ route('{ModelName}.{MethodName}', ${VariableName}) }}">Button</a>
+
+Create a new speciment to a model:
+    -First make sure you have a route with resource to your model
+    -Then modify the App\Models\{ModelName} with the $fillable columns like so:
+        -protected $fillable = ['{columnName1}', '{columnName2}']; (Important, you need to put everything here that you want to modify(even foregin id's if they not have a default value))
+    -Then create your store method into the controller: App\Http\Controllers\{ModelController}
+        -In the controller you need to write this: 
+            {ModelName}::create([
+                '{columnName1}' => $request->input('{columnName1}'),
+                '{columnName2}' => $request->input('{columName2}')
+            ]);
+            return redirect()->route('{The Page where you want to go back}');
+    -After the store method is done you need set true the store in App\Http\Controllers\Requests\{ModelRequest} like this:
+        public function authorize(): bool
+        {
+            return true;
+        }
+    -Now everything is ready for the frontend part:
+        <form method="POST" action="{{ route('{ModelRoute}.store') }}">
+            @csrf
+            <input type="text" name="{columnName1}" class="form-control" required>
+            <input type="text" name="{columnName1}" class="form-control" required>
+
+            <button type="submit" class="btn btn-dark">Save</button>
+        </form>    
+
+Create a show page:
+    -First you still need the store route
+    -Now do the view method in the App\Http\Controllers\{ControllerName} for example:
+        public function show(File $file)
+        {
+            return view('{ShowPage}', ['{VariableNameToGive}' => $file]);
+        }
+    -Then you can do the frontend:
+        -<a href="{{ route('{Model}.show', ${Variable}) }}">View</a>
+
+Edit:
+If you still not set to true the App\Http\Controllers\Requests\{ModelRequest} then quicly do it before you continue
+    Controller example:
+        public function update(UpdateFileRequest $request, File $file)
+        {
+            $file->update($request->all());
+            $file->save();
+            
+            return view('files.index', ['user' => Auth::user()]);
+        }
+
+    Frontend example:
+        Your form need to user POST method but in the form you need to call the PUT method and the csrf token
+        <form method="POST" action="{{ route('{RouteName}.update', ${Variable}) }}">
+            @csrf
+            @method('PUT')
+            <input type="text" name="{ColumName}" id="{ColumnName}" class="form-control" value="{{ ${VaribaleName}->{ColumName} }}">
+            <button type="submit" class="btn btn-dark">Save</button>
+        </form>
+
+Delete:
+For this you will need the destroy method in the App\Http\Controller\{ControllerName}
+In the destroy method you will need to delte everything that is connected to the model, for example:
+    public function destroy(File $file)
+    {
+        foreach($file->suspends as $suspend)
+        {
+            $suspend->delete();
+        }
+
+        $file->delete();
+        return view('files.index', ['user' => Auth::user()]);
+    }
+Then in the frontend it will look like this:
+You will need to call a POST method, give the route,, use the csfr token and the DELTE method
+    <form method="POST" action="{{ route('files.destroy', $file) }}">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
