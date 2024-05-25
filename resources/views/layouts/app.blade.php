@@ -86,13 +86,13 @@
                         <a class="btn btn-dark col-12" href="{{ route('files.index') }}">Files</a>
                     </div>
                     <div class="card m-2">
-                        <a class="btn btn-dark col-12">Comment</a>
+                        <a class="btn btn-dark col-12" href="{{ route('comments.index') }}">Comment</a>
                     </div>
                     <div class="card m-2">
-                        <a class="btn btn-dark col-12">Friends</a>
+                        <a class="btn btn-dark col-12" href="{{ route('soul_links.index') }}">Friends</a>
                     </div>
                     <div class="card m-2 mb-0">
-                        <a class="btn btn-dark col-12 p-2">Link Requests</a>  
+                        <a class="btn btn-dark col-12 p-2" href="{{ route('soul_links_requests.index') }}">Link Requests</a>  
                     </div>
                 <hr>
                 <div class="card m-2 mb-0">

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('views')->default('0');
             $table->integer('likes')->default('0');
             $table->integer('user_id')->index('user_id');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

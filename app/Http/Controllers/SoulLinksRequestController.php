@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\SoulLinksRequest;
 use App\Http\Requests\StoreSoulLinksRequestRequest;
 use App\Http\Requests\UpdateSoulLinksRequestRequest;
+use Illuminate\Support\Facades\Auth;
 
 class SoulLinksRequestController extends Controller
 {
@@ -13,7 +14,7 @@ class SoulLinksRequestController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(Auth::user()->incoming_soul_links_requests);
     }
 
     /**

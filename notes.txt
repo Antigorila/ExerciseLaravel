@@ -185,3 +185,9 @@ You will need to call a POST method, give the route,, use the csfr token and the
 
 Custom route:
 Route::put('{Route}/{ { VaribaleName } }/{Method}', [{Controller}::class, '{Method}'])->name('{Route}.{Method}');
+
+Use of softDeltes:
+    -To the migration of the Model:
+        -$table->softDeletes();
+    -To the App\Http\Models\{ModelName} of the table
+        -use SoftDeletes;

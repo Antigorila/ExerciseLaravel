@@ -14,7 +14,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(Auth::user()->comments);
     }
 
     /**
@@ -30,7 +30,14 @@ class CommentController extends Controller
      */
     public function store(StoreCommentRequest $request)
     {
-        //
+        $comment = Comment::create([
+            'text' => 'Test comment',
+            'user_id' => 51,
+            'file_id' => rand(1, 72)
+        ]);
+
+        $comment->save();
+        return response()->json($comment);
     }
     public function like(Comment $comment)
     {

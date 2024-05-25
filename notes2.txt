@@ -1,0 +1,253 @@
+### Projekt létrehozása
+1. `composer create-project laravel/laravel [név]`
+2. Nyisd meg a létrehozott mappát az explorerben
+3. `composer require laravel/ui`
+4. `npm install`
+5. `php artisan ui bootstrap --auth`
+6. Állítsd be a `.env` fájlt
+
+### Projekt futtatása
+1. `php artisan serve`
+2. `npm run dev` (ha nem működik, frissítsd az npm-et)
+
+### Modell létrehozása
+- `php artisan make:model {ModelNév} --all`
+
+### Külföldi kulcs létrehozása
+- ID szintaxis: `$table->id();`
+
+- A migrációhoz:
+  ```php
+  $table->foreignId('{foreign_table}_id')->constrained()->onDelete('cascade');
+  ```
+
+- Artisan parancs:
+  ```shell
+  php artisan make:migration add_foreign_keys_to_{table_name}_table
+  ```
+
+- Az új fájlban (up metódus):
+  ```php
+  $table->foreign('{foreign_id}', '{table_name}_ibfk_{column_number}')->references('id')->on('{foreign_table}');
+  ```
+
+- Az új fájlban (down metódus):
+  ```php
+  $table->dropForeign('{table_name}_ibfk_{column_number}');
+  ```
+
+### Adatbázis terminál parancsok
+- `php artisan optimize`
+- `php artisan migrate:fresh --seed`
+
+### UserSeeder létrehozása
+- `php artisan make:seeder UserSeeder`
+
+### Seeder használata
+- `{ClassName}::factory({Count})->create();`
+
+### Adatbázis Seeder használata
+```php
+$this->call([
+    {SeederClassName}::class,
+]);
+```
+
+### Blade sablon kiterjesztése
+```php
+@extends('{oldal_forrás}')
+@section('content')
+{Oldal tartalom itt}
+@endsection
+```
+
+### Kapcsolatok
+#### BelongsTo
+```php
+public function {kapcsolatNév}(): BelongsTo
+{
+    return $this->belongsTo({ClassName}::class);
+}
+
+// Önhivatkozó kapcsolat esetén
+public function {kapcsolatNév}(): BelongsTo
+{
+    return $this->belongsTo({ClassName}::class, '{foreign_id}');
+}
+```
+
+#### HasMany
+```php
+public function {kapcsolatNév}(): HasMany
+{
+    return $this->hasMany({ClassName}::class);
+}
+```
+
+#### BelongsToMany
+```php
+public function {kapcsolatNév}(): BelongsToMany
+{
+    return $this->belongsToMany({ClassName}::class);
+}
+```
+
+### Modell kitölthető tulajdonságai
+Az `app/Models/{ModelNév}.php` fájlban:
+```php
+protected $fillable = ['{columnName1}', '{columnName2}', ...];
+```
+
+### CSS importálása
+Az `app.scss` fájlban:
+```scss
+@import 'resources/css/app.css';
+```
+
+### Útvonalak optimalizálása
+Az útvonalak módosítása után:
+```shell
+php artisan optimize
+```
+
+### Képtárolási link létrehozása
+- `php artisan storage:link`
+
+Blade-ben:
+```html
+<img src="{{ asset('storage/' . $imageName) }}">
+```
+
+### Változó átadása a nézetnek
+A vezérlőben:
+```php
+public function index()
+{
+    return view('{view}', ['{variableName}' => {variable}]);
+}
+```
+
+Blade-ben:
+```php
+{{ $variableName }}
+```
+
+### Útvonalak
+#### Erőforrás útvonal
+A `routes/web.php` fájlban:
+```php
+Route::resource('{modelName}', App\Http\Controllers\{ModelController}::class);
+```
+
+#### Gomb útvonal
+Konstruktor nélkül:
+```html
+<a class="btn" href="{{ route('{modelName}.{methodName}') }}">Gomb</a>
+```
+
+Konstruktorral:
+```html
+<a class="btn" href="{{ route('{modelName}.{methodName}', $variable) }}">Gomb</a>
+```
+
+### Új rekord létrehozása
+Győződj meg róla, hogy a kitölthető tulajdonságok szerepelnek az `App\Models\{ModelName}` fájlban:
+```php
+protected $fillable = ['{columnName1}', '{columnName2}'];
+```
+
+Store metódus az `App\Http\Controllers\{ModelController}` fájlban:
+```php
+public function store(Request $request)
+{
+    {ModelName}::create($request->all());
+    return redirect()->route('{route}');
+}
+```
+
+Authorize metódus az `App\Http\Requests\{ModelRequest}` fájlban:
+```php
+public function authorize(): bool
+{
+    return true;
+}
+```
+
+Űrlap a Blade-ben:
+```html
+<form method="POST" action="{{ route('{modelRoute}.store') }}">
+    @csrf
+    <input type="text" name="{columnName1}" class="form-control" required>
+    <input type="text" name="{columnName2}" class="form-control" required>
+    <button type="submit" class="btn btn-dark">Mentés</button>
+</form>
+```
+
+### Megjelenítési oldal
+Vezérlő metódus:
+```php
+public function show({Model} $model)
+{
+    return view('{view}', ['{variable}' => $model]);
+}
+```
+
+Link a Blade-ben:
+```html
+<a href="{{ route('{model}.show', $variable) }}">Megtekintés</a>
+```
+
+### Rekord szerkesztése
+Update metódus a vezérlőben:
+```php
+public function update(Request $request, {Model} $model)
+{
+    $model->update($request->all());
+    return redirect()->route('{route}');
+}
+```
+
+Űrlap a Blade-ben:
+```html
+<form method="POST" action="{{ route('{route}.update', $variable) }}">
+    @csrf
+    @method('PUT')
+    <input type="text" name="{columnName}" class="form-control" value="{{ $variable->{columnName} }}">
+    <button type="submit" class="btn btn-dark">Mentés</button>
+</form>
+```
+
+### Rekord törlése
+Destroy metódus a vezérlőben:
+```php
+public function destroy({Model} $model)
+{
+    $model->delete();
+    return redirect()->route('{route}');
+}
+```
+
+Űrlap a Blade-ben:
+```html
+<form method="POST" action="{{ route('{route}.destroy', $variable) }}">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger">Törlés</button>
+</form>
+```
+
+### Egyedi útvonal
+```php
+Route::put('{route}/{variable}/{method}', [{Controller}::class, '{method}'])->name('{route}.{method}');
+```
+
+### SoftDeletes használata
+A migrációban:
+```php
+$table->softDeletes();
+```
+
+Az `App\Models\{ModelName}` fájlban:
+```php
+use SoftDeletes;
+```
