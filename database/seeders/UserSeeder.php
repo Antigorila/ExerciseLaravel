@@ -13,6 +13,16 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        $users = [
+            ['name' => 'John', 'email' => 'jhonmy@gmail.com'],
+            ['name' => 'John2' , 'email' => 'jhonmy2@gmail.com'],
+        ];
+
+        foreach ($users as $user)
+        {
+            User::create($user);
+        }
+
         User::factory(50)->create();
     }
 }

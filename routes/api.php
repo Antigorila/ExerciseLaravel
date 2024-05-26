@@ -25,12 +25,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('api_files', FileController::class);
-Route::apiResource('api_comments', CommentController::class);
-Route::apiResource('api_replies', ReplyController::class);
-Route::apiResource('api_soul_links', SoulLinkController::class);
-Route::apiResource('api_soul_links_requests', SoulLinksRequestController::class);
-Route::apiResource('api_suspends', SuspendController::class);
-
-Route::put('api_comments/{comment}/like', [CommentController::class, 'like'])->name('api_comments.like');
-Route::put('api_replies/{reply}/like', [ReplyController::class, 'like'])->name('api_replies.like');
+Route::resource('/api_comments', CommentController::class);
+Route::resource('/api_files', FileController::class);

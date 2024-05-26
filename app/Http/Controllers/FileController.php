@@ -37,15 +37,18 @@ class FileController extends Controller
             'content' => 'required|string',
         ]);
 
-        File::create([
+        $file = File::create([
             'name' => $validatedData['name'],
-            'folder_name' => Auth::user()->folder_name,
+            //'folder_name' => Auth::user()->folder_name,
+            'folder_name' => 'FolderName',
             'description' => $request->input('description'),
             'content' => $validatedData['content'],
-            'user_id' => Auth::user()->id,
+            //'user_id' => Auth::user()->id,
+            'user_id' => 80,
         ]);
 
-        return redirect()->route('files.index')->with('success', 'File created successfully.');
+        return response()->json(['message' => 'File created', $file]);
+        //return redirect()->route('files.index')->with('success', 'File created successfully.');
     }
 
     /**

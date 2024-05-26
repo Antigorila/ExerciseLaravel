@@ -191,3 +191,15 @@ Use of softDeltes:
         -$table->softDeletes();
     -To the App\Http\Models\{ModelName} of the table
         -use SoftDeletes;
+
+To create an api:
+    -Fill the fillabels in the model
+    -api.php:
+        -Route::resource('/{ControllerName}', {Controller}::class);
+    -Method return:
+        -return response()->json(['message' => '{Message}', {ReturnVariable}]);
+    -PostMan test(At laravel the postman know the methods):
+        -form-data: Create
+            -http://127.0.0.1:8000/api/{Route}
+        -url-encoded: Update
+            -http://127.0.0.1:8000/api/{Route}/{id}

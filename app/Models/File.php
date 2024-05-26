@@ -13,7 +13,8 @@ class File extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['name', 'folder_name', 'description', 'content', 'user_id'];
+    //protected $fillable = ['name', 'folder_name', 'description', 'content', 'user_id'];
+    protected $fillable = ['name', 'description', 'content'];
 
     public function user():BelongsTo 
     {

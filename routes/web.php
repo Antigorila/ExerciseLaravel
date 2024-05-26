@@ -4,6 +4,9 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ReplyController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 /*
 |--------------------------------------------------------------------------
