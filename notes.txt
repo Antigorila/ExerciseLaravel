@@ -193,6 +193,8 @@ Use of softDeltes:
         -use SoftDeletes;
 
 To create an api:
+    -Add api.web:
+        -php artisan install:api
     -Fill the fillabels in the model
     -api.php:
         -Route::resource('/{ControllerName}', {Controller}::class);
